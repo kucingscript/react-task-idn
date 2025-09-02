@@ -16,3 +16,14 @@ export interface UserProfile {
   level: "ADMIN" | "CLIENT" | string;
   corporates: Corporate;
 }
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface ApiResponse {
+  code: number;
+  message: string;
+  data: UserProfile;
+}

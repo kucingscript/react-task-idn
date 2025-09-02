@@ -1,10 +1,16 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Login from "./pages/Login/Login";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
+import Items from "./pages/Items/Items";
+import Dashboard from "./pages/AdminDashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -19,9 +25,13 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/admin",
+        path: "admin",
         element: <AdminLayout />,
-        children: [{ path: "items", element: <h1>Items</h1> }],
+        children: [
+          { index: true, element: <Navigate to="dashboard" replace /> },
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "items", element: <Items /> },
+        ],
       },
     ],
   },

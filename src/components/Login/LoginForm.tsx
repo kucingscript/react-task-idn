@@ -46,7 +46,7 @@ export function LoginForm({
       const res = await loginUser(data);
       if (res && res.code === 0) {
         login(res.data);
-        navigate("/admin/items");
+        navigate("/admin/dashboard");
       } else {
         setError("root", {
           message: res.message || "Login failed. Please try again.",
