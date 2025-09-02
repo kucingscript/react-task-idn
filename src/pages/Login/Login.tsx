@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/Login/LoginForm";
 const Login = () => {
   return (
     <div className="w-full lg:grid lg:min-h-svh lg:grid-cols-2 xl:min-h-svh">
-      <div className="flex items-center justify-center p-6 py-12 md:p-10">
+      <div className="flex items-center justify-center min-h-svh p-6 py-12 md:p-10 lg:min-h-0">
         <div className="w-full max-w-sm">
           <LoginForm />
         </div>

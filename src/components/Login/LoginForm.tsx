@@ -5,6 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormInput from "../FormInput/FormInput";
 import { Label } from "../ui/label";
+import { useAuthStore } from "@/store/auth";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { loginUser } from "@/lib/authService";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
@@ -20,32 +24,64 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+
   const form = useForm<LoginFormValues>({
     resolver: yupResolver(loginSchema),
   });
 
-  const handleSubmit = async (data: LoginFormValues) => {
-    console.log(data);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const res = await loginUser(data);
+      console.log(res);
+      if (res && res.code === 0) {
+        login(res.data);
+        navigate("/admin/items");
+      } else {
+        setError("root", {
+          message: res.message || "Login failed. Please try again.",
+        });
+      }
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "An unexpected error occurred";
+      setError("root", { message: errorMessage });
+    }
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-3xl font-bold">Sign In</h1>
-        <p className="text-balance text-muted-foreground">
+        <h1 className="font-bold text-5xl">Sign In</h1>
+        <p className="text-muted-foreground ">
           Enter your email below to login to your account
         </p>
       </div>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-4">
+          {errors.root && (
+            <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md">
+              {errors.root.message}
+            </div>
+          )}
+
           <FormInput<LoginFormValues>
             name="email"
             type="email"
             placeholder="hello@example.com"
             label="Email"
             required
-            register={form.register}
-            error={form.formState.errors}
+            register={register}
+            error={errors}
           />
           <div>
             <div className="flex items-center">
@@ -62,13 +98,24 @@ export function LoginForm({
               type="password"
               placeholder="********"
               required
-              register={form.register}
-              error={form.formState.errors}
+              register={register}
+              error={errors}
             />
           </div>
           <div className="flex flex-col gap-3">
-            <Button type="submit" className="w-full cursor-pointer">
-              Login
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
             <Button variant="outline" className="w-full cursor-not-allowed">
               Login with Google

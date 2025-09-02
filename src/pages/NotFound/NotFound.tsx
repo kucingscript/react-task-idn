@@ -1,8 +1,9 @@
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+    <div className="flex items-center justify-center min-h-svh px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
       <div className="w-full space-y-6 text-center">
         <div className="space-y-3">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
@@ -12,12 +13,9 @@ const NotFound = () => {
             Sorry, we couldn&#x27;t find the page you&#x27;re looking for.
           </p>
         </div>
-        <Link
-          to={"/"}
-          className="inline-flex h-10 items-center rounded-md border border-gray-200 bg-white shadow-sm px-8 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900"
-        >
-          Return to website
-        </Link>
+        <Button variant={"secondary"}>
+          <Link to={"/"}>Return to website</Link>
+        </Button>
       </div>
     </div>
   );
