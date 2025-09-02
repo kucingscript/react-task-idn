@@ -13,6 +13,6 @@ export interface UserProfile {
   phone: string | null;
   type: string;
   token: string;
-  level: "Admin" | "Client" | string;
+  level: "ADMIN" | "CLIENT" | string;
   corporates: Corporate;
 }

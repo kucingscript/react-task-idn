@@ -12,7 +12,10 @@ import { loginUser } from "@/lib/authService";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
-  password: yup.string().required("Password is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(10, "Password must be at least 10 characters"),
 });
 
 interface LoginFormValues {
@@ -41,7 +44,6 @@ export function LoginForm({
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const res = await loginUser(data);
-      console.log(res);
       if (res && res.code === 0) {
         login(res.data);
         navigate("/admin/items");
@@ -52,8 +54,17 @@ export function LoginForm({
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "An unexpected error occurred";
+      let errorMessage =
+        "An unexpected error occurred. Please try again later.";
+
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = "Invalid email or password.";
+        } else if (error.response.status === 404) {
+          errorMessage = "User not found.";
+        }
+      }
+
       setError("root", { message: errorMessage });
     }
   };

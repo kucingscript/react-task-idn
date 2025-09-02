@@ -15,6 +15,6 @@ interface ApiResponse {
 export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<ApiResponse> => {
-  const res = await apiClient.post<ApiResponse>("/auth/login", credentials);
+  const res = await apiClient.post<ApiResponse>("/login", credentials);
   return res.data;
 };

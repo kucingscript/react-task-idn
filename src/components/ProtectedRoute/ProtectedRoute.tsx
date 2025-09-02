@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const userRole = useAuthStore((state) => state.user?.level);
 
-  const isAdmin = isLoggedIn && userRole === "Admin";
+  const isAdmin = isLoggedIn && userRole?.toLowerCase() === "admin";
 
   return isAdmin ? <Outlet /> : <Navigate to="/" replace />;
 };
