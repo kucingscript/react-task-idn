@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  IconDashboard,
   IconInnerShadowTop,
   IconListDetails,
   IconSettings,
@@ -17,14 +18,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/store/auth";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "https://github.com/shadcn.png",
-  },
   navMain: [
+    {
+      title: "Dashboard",
+      url: "/admin/dashboard",
+      icon: IconDashboard,
+    },
     {
       title: "Items",
       url: "/admin/items",
@@ -41,6 +43,13 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+  const userData = {
+    name: user?.name ?? "Admin",
+    email: user?.email ?? "admin@localhost",
+    avatar: "https://github.com/shadcn.png",
+  };
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -50,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/admin/dashboard">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">IDN</span>
               </a>
@@ -63,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   );
