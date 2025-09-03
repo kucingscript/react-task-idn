@@ -9,8 +9,9 @@ import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
-import Items from "./pages/Items/Items";
 import Dashboard from "./pages/AdminDashboard/Dashboard";
+import ItemTypes from "./pages/ItemTypes/ItemTypes";
+import Rooms from "./pages/Rooms/Rooms";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: "dashboard", element: <Dashboard /> },
-          { path: "items", element: <Items /> },
+          { path: "item-types", element: <ItemTypes /> },
+          { path: "rooms", element: <Rooms /> },
         ],
       },
     ],

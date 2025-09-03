@@ -1,6 +1,8 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
+
 import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
@@ -19,6 +21,7 @@ const AdminLayout = () => {
         <div className="flex flex-1 flex-col">
           <Outlet />
         </div>
+        <Toaster />
       </SidebarInset>
     </SidebarProvider>
   );

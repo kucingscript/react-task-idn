@@ -1,13 +1,12 @@
 import { type Icon } from "@tabler/icons-react";
 import { Link, useLocation } from "react-router-dom";
-
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "./ui/sidebar";
 
 export function NavMain({
   items,
@@ -26,16 +25,16 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <Link to={item.url}>
-                <SidebarMenuButton
-                  tooltip={item.title}
-                  isActive={location.pathname === item.url}
-                  className="cursor-pointer"
-                >
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                isActive={location.pathname === item.url}
+              >
+                <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                </SidebarMenuButton>
-              </Link>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

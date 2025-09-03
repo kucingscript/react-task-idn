@@ -1,4 +1,7 @@
-import type { GetItemTypesParams, ItemTypeApiResponse } from "@/types/item";
+import type {
+  GetItemTypesParams,
+  ItemTypeApiResponse,
+} from "@/types/item-types";
 import apiClient from "./api";
 
 export const getItemTypes = async (

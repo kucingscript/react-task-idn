@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { loginUser } from "@/lib/authService";
+import { Button } from "../ui/button";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),

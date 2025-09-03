@@ -1,8 +1,5 @@
-interface CorporateInfo {
-  corporate_id: string;
-  name: string;
-  code: string;
-}
+import type { CorporateInfo } from "./corporates";
+import type { PageInfo } from "./pagination";
 
 export interface ItemType {
   item_type_id: string;
@@ -15,12 +12,6 @@ export interface ItemType {
   corporate_id: string;
   created_at: string;
   corporates: CorporateInfo;
-}
-
-export interface PageInfo {
-  page: number;
-  total_data: number;
-  total_page: number;
 }
 
 export interface GetItemTypesParams {

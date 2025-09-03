@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   IconDashboard,
+  IconHomeCog,
   IconInnerShadowTop,
   IconListDetails,
   IconSettings,
@@ -9,6 +10,8 @@ import {
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
+
+import { useAuthStore } from "@/store/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -17,8 +20,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { useAuthStore } from "@/store/auth";
+} from "./ui/sidebar";
+import { Link } from "react-router-dom";
 
 const data = {
   navMain: [
@@ -28,9 +31,14 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Items",
-      url: "/admin/items",
+      title: "Item Types",
+      url: "/admin/item-types",
       icon: IconListDetails,
+    },
+    {
+      title: "Rooms",
+      url: "/admin/rooms",
+      icon: IconHomeCog,
     },
   ],
   navSecondary: [
@@ -59,10 +67,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/admin/dashboard">
+              <Link to={"/admin/dashboard"}>
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">IDN</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
