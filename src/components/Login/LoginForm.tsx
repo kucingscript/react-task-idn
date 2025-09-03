@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { loginUser } from "@/lib/authService";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
@@ -28,6 +29,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const { login } = useAuthStore();
+  const { isLoggedIn } = useAuthStore();
   const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
@@ -68,6 +70,14 @@ export function LoginForm({
       setError("root", { message: errorMessage });
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
+
+  if (isLoggedIn) return null;
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

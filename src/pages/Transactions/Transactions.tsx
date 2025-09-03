@@ -1,11 +1,11 @@
-import { getRooms } from "@/lib/roomService";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/DataTable/DataTable";
-import { columns } from "@/components/RoomsDataTable/RoomsDataTable";
+import { columns } from "@/components/TransactionDataTable/TransactionDataTable";
+import type { Transaction } from "@/types/transaction";
+import { getTransactions } from "@/lib/transactionService";
 import { useDataTable } from "@/hooks/use-data-table";
-import type { Room } from "@/types/room";
 
-const Rooms = () => {
+const Transactions = () => {
   const {
     data,
     pageInfo,
@@ -15,7 +15,7 @@ const Rooms = () => {
     setPage,
     searchTerm,
     setSearchTerm,
-  } = useDataTable<Room>(getRooms, "Failed to fetch rooms.");
+  } = useDataTable<Transaction>(getTransactions, "Failed to fetch rooms.");
 
   if (error && data.length === 0) {
     return (
@@ -26,9 +26,9 @@ const Rooms = () => {
   return (
     <div className="container mx-auto p-4 lg:p-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
-        <h1 className="text-2xl font-bold">Rooms</h1>
+        <h1 className="text-2xl font-bold">In Transaction</h1>
         <Input
-          placeholder="Search rooms..."
+          placeholder="Search by code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:max-w-sm"
@@ -44,11 +44,11 @@ const Rooms = () => {
           pageInfo={pageInfo}
           currentPage={page}
           onPageChange={setPage}
-          getRowId={(row) => row.room_id}
+          getRowId={(row) => row.in_transaction_id}
         />
       )}
     </div>
   );
 };
 
-export default Rooms;
+export default Transactions;

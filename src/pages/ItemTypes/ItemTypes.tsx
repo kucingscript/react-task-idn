@@ -1,81 +1,50 @@
-import { ItemsTypesDataTable } from "@/components/ItemTypesDataTable/ItemTypesDataTable";
-import { Input } from "@/components/ui/input";
-import { useDebounce } from "@/hooks/use-debounce";
 import { getItemTypes } from "@/lib/ItemTypesService";
 import type { ItemType } from "@/types/item-types";
-import type { PageInfo } from "@/types/pagination";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { DataTable } from "@/components/DataTable/DataTable";
+import { columns } from "@/components/ItemTypesDataTable/ItemTypesDataTable";
+import { useDataTable } from "@/hooks/use-data-table";
 
 const ItemTypes = () => {
-  const [items, setItems] = useState<ItemType[]>([]);
-  const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    data,
+    pageInfo,
+    loading,
+    error,
+    page,
+    setPage,
+    searchTerm,
+    setSearchTerm,
+  } = useDataTable<ItemType>(getItemTypes, "Failed to fetch rooms.");
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  const fetchItems = async (currentPage: number, search: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getItemTypes({
-        page: currentPage,
-        limit,
-        q: search,
-      });
-      if (response.code === 0) {
-        setItems(response.data);
-        setPageInfo(response.pageInfo);
-      } else {
-        setError(response.message);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Failed to fetch items.";
-      toast.error(errorMessage);
-      setError("Failed to fetch items.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchItems(page, debouncedSearchTerm);
-  }, [page, debouncedSearchTerm, limit]);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  if (error) {
-    return <div className="p-4 lg:p-6">Error: {error}</div>;
+  if (error && data.length === 0) {
+    return (
+      <div className="p-4 lg:p-6 text-center text-red-500">Error: {error}</div>
+    );
   }
 
   return (
     <div className="container mx-auto p-4 lg:p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Items</h1>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+        <h1 className="text-2xl font-bold">Item Types</h1>
         <Input
-          placeholder="Search items..."
+          placeholder="Search By Name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          className="w-full md:max-w-sm"
         />
       </div>
 
       {loading ? (
         <div className="text-center py-10">Loading...</div>
       ) : (
-        <ItemsTypesDataTable
-          data={items}
+        <DataTable
+          columns={columns}
+          data={data}
           pageInfo={pageInfo}
-          onPageChange={handlePageChange}
           currentPage={page}
+          onPageChange={setPage}
+          getRowId={(row) => row.item_type_id}
         />
       )}
     </div>

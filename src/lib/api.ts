@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store/auth";
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: `https://api-melin.logix.id/api`,
+  baseURL: `${import.meta.env.VITE_API_URL}`,
   headers: {
     "Content-Type": "application/json",
   },

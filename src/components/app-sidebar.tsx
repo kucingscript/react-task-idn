@@ -1,10 +1,13 @@
 import * as React from "react";
 import {
+  IconBrandBluesky,
+  IconBuildingWarehouse,
   IconDashboard,
   IconHomeCog,
-  IconInnerShadowTop,
+  IconLicense,
   IconListDetails,
   IconSettings,
+  IconSwitchHorizontal,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -40,8 +43,23 @@ const data = {
       url: "/admin/rooms",
       icon: IconHomeCog,
     },
+    {
+      title: "Items",
+      url: "/admin/items",
+      icon: IconLicense,
+    },
+    {
+      title: "Transactions",
+      url: "/admin/transactions",
+      icon: IconSwitchHorizontal,
+    },
   ],
   navSecondary: [
+    {
+      title: "Home",
+      url: "/",
+      icon: IconBuildingWarehouse,
+    },
     {
       title: "Settings",
       url: "#",
@@ -68,8 +86,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link to={"/admin/dashboard"}>
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">IDN</span>
+                <IconBrandBluesky className="!size-5" />
+                <span className="text-base font-semibold">
+                  Indo Digital Niaga
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

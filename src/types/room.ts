@@ -1,5 +1,4 @@
-import type { CorporateInfo } from "./corporates";
-import type { PageInfo } from "./pagination";
+import type { CorporateInfo } from "./types";
 
 export interface Room {
   room_id: string;
@@ -7,17 +6,4 @@ export interface Room {
   code: string;
   status: string;
   corporates: CorporateInfo;
-}
-
-export interface GetRoomsParams {
-  page?: number;
-  limit?: number;
-  q?: string;
-}
-
-export interface RoomApiResponse {
-  code: number;
-  message: string;
-  data: Room[];
-  pageInfo: PageInfo;
 }

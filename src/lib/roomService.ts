@@ -1,10 +1,11 @@
-import type { GetRoomsParams, RoomApiResponse } from "@/types/room";
 import apiClient from "./api";
+import type { ApiResponse, ApiParams } from "@/types/types";
+import type { Room } from "@/types/room";
 
 export const getRooms = async (
-  params: GetRoomsParams
-): Promise<RoomApiResponse> => {
-  const res = await apiClient.get<RoomApiResponse>("/rooms", {
+  params: ApiParams
+): Promise<ApiResponse<Room>> => {
+  const res = await apiClient.get<ApiResponse<Room>>("/rooms", {
     params: {
       page: params.page || 1,
       limit: params.limit || 10,

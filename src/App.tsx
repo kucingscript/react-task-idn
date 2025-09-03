@@ -12,6 +12,8 @@ import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import Dashboard from "./pages/AdminDashboard/Dashboard";
 import ItemTypes from "./pages/ItemTypes/ItemTypes";
 import Rooms from "./pages/Rooms/Rooms";
+import Items from "./pages/Items/Items";
+import Transactions from "./pages/Transactions/Transactions";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
           { path: "dashboard", element: <Dashboard /> },
           { path: "item-types", element: <ItemTypes /> },
           { path: "rooms", element: <Rooms /> },
+          { path: "items", element: <Items /> },
+          { path: "transactions", element: <Transactions /> },
         ],
       },
     ],

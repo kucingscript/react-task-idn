@@ -22,7 +22,7 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface ApiResponse {
+export interface LoginResponse {
   code: number;
   message: string;
   data: UserProfile;
