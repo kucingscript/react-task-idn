@@ -1,13 +1,26 @@
+import { isTokenValid } from "@/lib/token";
 import { useAuthStore } from "@/store/auth";
 import { Navigate, Outlet } from "react-router-dom";
+import { toast } from "sonner";
 
 const ProtectedRoute = () => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const userRole = useAuthStore((state) => state.user?.level);
+  const { token, user, logout } = useAuthStore();
 
-  const isAdmin = isLoggedIn && userRole?.toLowerCase() === "admin";
+  if (!isTokenValid(token)) {
+    if (useAuthStore.getState().isLoggedIn) {
+      toast.error("Sesi Anda telah berakhir, silakan login kembali.");
+      logout();
+    }
 
-  return isAdmin ? <Outlet /> : <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
+  }
+
+  const isAdmin = user?.level?.toLowerCase() === "admin";
+  if (!isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

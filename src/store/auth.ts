@@ -7,6 +7,7 @@ interface AuthStoreState {
   user: UserProfile | null;
   token: string | null;
   login: (userData: UserProfile) => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthStoreState>()(
@@ -21,6 +22,13 @@ export const useAuthStore = create<AuthStoreState>()(
           isLoggedIn: true,
           user: userData,
           token: userData.token,
+        }),
+
+      logout: () =>
+        set({
+          isLoggedIn: false,
+          user: null,
+          token: null,
         }),
     }),
     {

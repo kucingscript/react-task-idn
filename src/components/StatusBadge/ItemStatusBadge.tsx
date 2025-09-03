@@ -5,7 +5,7 @@ interface StatusBadgeProps {
   status: ItemStatus | null | undefined;
 }
 
-export const StatusBadge = ({ status }: StatusBadgeProps) => {
+export const ItemStatusBadge = ({ status }: StatusBadgeProps) => {
   if (!status) {
     return null;
   }

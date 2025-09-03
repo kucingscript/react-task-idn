@@ -1,5 +1,6 @@
 import type { Transaction } from "@/types/transaction";
 import type { ColumnDef } from "@tanstack/react-table";
+import { TranscationStatusBadge } from "../StatusBadge/TransactionStatusBadge";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -41,6 +42,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => <TranscationStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "corporates.name",

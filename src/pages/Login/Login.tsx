@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/Login/LoginForm";
+import LoginImage from "@/assets/login.webp";
 
 const Login = () => {
   return (
@@ -10,7 +11,7 @@ const Login = () => {
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="https://plus.unsplash.com/premium_vector-1726498072933-f6112c1b1396?q=80&w=1077&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={LoginImage}
           alt="Login Image"
           className="h-full w-full object-cover"
         />

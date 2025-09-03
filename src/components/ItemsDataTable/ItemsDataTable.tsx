@@ -2,7 +2,7 @@ import type { Item } from "@/types/item";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
-import { StatusBadge } from "../StatusBadge/StatusBadge";
+import { ItemStatusBadge } from "../StatusBadge/ItemStatusBadge";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -22,12 +22,12 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <StatusBadge status={row.original.status} />,
+    cell: ({ row }) => <ItemStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "last_status",
     header: "Last Status",
-    cell: ({ row }) => <StatusBadge status={row.original.last_status} />,
+    cell: ({ row }) => <ItemStatusBadge status={row.original.last_status} />,
   },
   {
     accessorKey: "wash_count",

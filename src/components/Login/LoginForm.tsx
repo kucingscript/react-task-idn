@@ -73,7 +73,7 @@ export function LoginForm({
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/");
+      navigate("/admin/dashboard");
     }
   }, [isLoggedIn, navigate]);
 

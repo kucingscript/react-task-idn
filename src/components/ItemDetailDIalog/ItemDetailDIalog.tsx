@@ -6,7 +6,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import type { Item } from "@/types/item";
-import { StatusBadge } from "../StatusBadge/StatusBadge";
+import { ItemStatusBadge } from "../StatusBadge/ItemStatusBadge";
 
 interface ItemDetailDialogProps {
   item: Item | null;
@@ -41,11 +41,11 @@ export const ItemDetailDialog = ({
           </div>
           <div className="grid grid-cols-[150px_1fr] items-center gap-4">
             <span className="text-muted-foreground">Status</span>
-            <StatusBadge status={item.status} />
+            <ItemStatusBadge status={item.status} />
           </div>
           <div className="grid grid-cols-[150px_1fr] items-center gap-4">
             <span className="text-muted-foreground">Last Status</span>
-            <StatusBadge status={item.last_status} />
+            <ItemStatusBadge status={item.last_status} />
           </div>
           <div className="grid grid-cols-[150px_1fr] items-center gap-4">
             <span className="text-muted-foreground">Wash Count</span>
