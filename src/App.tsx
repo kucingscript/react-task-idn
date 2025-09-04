@@ -15,6 +15,7 @@ import Rooms from "./pages/Rooms/Rooms";
 import Items from "./pages/Items/Items";
 import Transactions from "./pages/Transactions/Transactions";
 import CreateTransaction from "./pages/Transactions/CreateTransaction";
+import CreateItem from "./pages/Items/CreateItem";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
           { path: "item-types", element: <ItemTypes /> },
           { path: "rooms", element: <Rooms /> },
           { path: "items", element: <Items /> },
+          { path: "items/create", element: <CreateItem /> },
           { path: "transactions", element: <Transactions /> },
           { path: "transactions/create", element: <CreateTransaction /> },
         ],

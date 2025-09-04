@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { IconEye, IconPencil } from "@tabler/icons-react";
 import { ItemStatusBadge } from "../StatusBadge/ItemStatusBadge";
+import { formattedDate } from "@/lib/utils";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -36,19 +37,14 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "procurement_date",
     header: "Procurement Date",
-    cell: ({ row }) => {
-      const date = new Date(row.original.procurement_date);
-      return date.toLocaleDateString("id-ID", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    },
+    cell: ({ row }) => formattedDate({ date: row.original.procurement_date }),
   },
   {
     accessorKey: "vendors.name",
     header: "Vendor",
-    cell: ({ row }) => row.original.vendors?.name,
+    cell: ({ row }) => {
+      return row.original.vendors ? row.original.vendors.name : "-";
+    },
   },
   {
     id: "actions",

@@ -26,3 +26,8 @@ export interface ApiParams {
   limit?: number;
   q?: string;
 }
+
+export interface FormattedDateProps {
+  date: string | Date;
+  withTime?: boolean;
+}

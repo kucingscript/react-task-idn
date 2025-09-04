@@ -19,10 +19,7 @@ const loginSchema = yup.object().shape({
     .min(10, "Password must be at least 10 characters"),
 });
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+type LoginFormValues = yup.InferType<typeof loginSchema>;
 
 export function LoginForm({
   className,
@@ -48,7 +45,11 @@ export function LoginForm({
       const res = await loginUser(data);
       if (res && res.code === 0) {
         login(res.data);
-        navigate("/admin/dashboard");
+        if (res.data.level?.toLowerCase() === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       } else {
         setError("root", {
           message: res.message || "Login failed. Please try again.",

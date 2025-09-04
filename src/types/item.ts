@@ -17,6 +17,7 @@ export interface Item {
   wash_count: number;
   procurement_date: string;
   created_at: string;
+  updated_at: string;
   item_types: {
     item_type_id: string;
     name: string;
@@ -44,6 +45,20 @@ export interface ItemApiResponse {
   code: number;
   message: string;
   data: Item;
+}
+
+interface CreateDetailPayload {
+  item_id: string;
+}
+
+export interface CreateItemPayload {
+  corporate_id: string;
+  item_type_id: string;
+  room_id: string;
+  reff_id?: string;
+  procurement_date: string;
+  total_qty: number;
+  details: CreateDetailPayload[];
 }
 
 export interface UpdateItemPayload {

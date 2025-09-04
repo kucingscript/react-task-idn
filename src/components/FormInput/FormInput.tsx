@@ -9,7 +9,7 @@ import { Input } from "../ui/input";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface FormInputTypes<T extends Record<string, any>> {
-  type: "text" | "email" | "password";
+  type: "text" | "email" | "password" | "number";
   placeholder?: string;
   register: UseFormRegister<T>;
   name: Path<T>;
@@ -18,6 +18,7 @@ interface FormInputTypes<T extends Record<string, any>> {
   disabled?: boolean;
   label?: string;
   labelRequired?: boolean;
+  step?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,6 +36,7 @@ const FormInput = <T extends Record<string, any>>(props: FormInputTypes<T>) => {
         placeholder={props.placeholder}
         required={props.required}
         disabled={props.disabled}
+        step={props.step}
         {...props.register(props.name)}
       />
 

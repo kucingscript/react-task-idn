@@ -1,8 +1,7 @@
+import FormInput from "@/components/FormInput/FormInput";
 import { FormSelect } from "@/components/FormSelect/FormSelect";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { getItems } from "@/lib/itemService";
 import { createTransaction } from "@/lib/transactionService";
 import { useAuthStore } from "@/store/auth";
@@ -10,6 +9,7 @@ import type { Item } from "@/types/item";
 import type { CreateTransactionPayload } from "@/types/transaction";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -24,15 +24,14 @@ const schema = yup.object().shape({
     .required("Infectious Type is required"),
   total_weight: yup.number().min(0).default(0).min(0),
   total_weight_scales: yup.number().min(0).default(0).min(0),
-  corporate_id: yup.string().required(),
   details: yup
     .array()
     .of(yup.object().shape({ item_id: yup.string().required() }))
     .min(1, "At least one item must be added")
-    .required(),
+    .required("At least one item must be added"),
 });
 
-type FormData = yup.InferType<typeof schema>;
+type FormData = Omit<CreateTransactionPayload, "corporate_id" | "total_qty">;
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
@@ -53,7 +52,6 @@ const CreateTransaction = () => {
       infectious_type: "NON_INFECTIOUS",
       total_weight: 0,
       total_weight_scales: 0,
-      corporate_id: user?.corporates.corporate_id || "",
       details: [],
     },
   });
@@ -66,8 +64,16 @@ const CreateTransaction = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const itemsRes = await getItems({ status: "REGISTERED", limit: 1000 });
-        if (itemsRes.code === 0) setAllItems(itemsRes.data);
+        const itemsInfoRes = await getItems({ status: "REGISTERED", limit: 1 });
+        const totalItems = itemsInfoRes.pageInfo?.total_data ?? 0;
+
+        if (totalItems > 0) {
+          const itemsRes = await getItems({
+            status: "REGISTERED",
+            limit: totalItems,
+          });
+          if (itemsRes.code === 0) setAllItems(itemsRes.data);
+        }
       } catch (error) {
         toast.error("Failed to fetch initial data.");
         console.error(error);
@@ -93,10 +99,15 @@ const CreateTransaction = () => {
   };
 
   const onSubmit = async (data: FormData) => {
+    if (!user) {
+      toast.error("User not found. Please log in again.");
+      return;
+    }
+
     const payload: CreateTransactionPayload = {
       ...data,
-      total_qty: data.details?.length || 0,
-      details: data.details || [],
+      corporate_id: user.corporates.corporate_id,
+      total_qty: data.details.length,
     };
 
     try {
@@ -137,40 +148,22 @@ const CreateTransaction = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <Label className="mb-1" htmlFor="total_weight">
-              Total Weight
-            </Label>
-            <Input
-              id="total_weight"
-              type="number"
-              step="0.1"
-              {...register("total_weight")}
-              className="w-full"
-            />
-            {errors.total_weight && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.total_weight.message}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label className="mb-1" htmlFor="total_weight_scales">
-              Total Weight Scales
-            </Label>
-            <Input
-              id="total_weight_scales"
-              type="number"
-              step="0.1"
-              {...register("total_weight_scales")}
-              className="w-full"
-            />
-            {errors.total_weight_scales && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.total_weight_scales.message}
-              </p>
-            )}
-          </div>
+          <FormInput<FormData>
+            name="total_weight"
+            type="number"
+            label="Total Weight"
+            register={register}
+            error={errors}
+            step="0.1"
+          />
+          <FormInput<FormData>
+            name="total_weight_scales"
+            type="number"
+            label="Total Weight Scales"
+            register={register}
+            error={errors}
+            step="0.1"
+          />
         </div>
 
         <div className="space-y-4 rounded-lg border p-4">
@@ -206,7 +199,7 @@ const CreateTransaction = () => {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-red-500 hover:text-red-600"
+                  className="h-8 w-8 text-red-500 hover:text-red-600 cursor-pointer"
                   onClick={() => remove(index)}
                 >
                   <IconTrash size={16} />
@@ -221,7 +214,14 @@ const CreateTransaction = () => {
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit Transaction"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Submit Transaction"
+            )}
           </Button>
         </div>
       </form>

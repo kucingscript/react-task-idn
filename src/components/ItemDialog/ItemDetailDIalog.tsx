@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Item } from "@/types/item";
 import { ItemStatusBadge } from "../StatusBadge/ItemStatusBadge";
+import { formattedDate } from "@/lib/utils";
 
 interface ItemDetailDialogProps {
   item: Item | null;
@@ -53,7 +54,37 @@ export const ItemDetailDialog = ({
           </div>
           <div className="grid grid-cols-[150px_1fr] items-center gap-4">
             <span className="text-muted-foreground">Procurement Date</span>
-            <span>{new Date(item.procurement_date).toLocaleDateString()}</span>
+            <span>
+              {formattedDate({
+                date: item.procurement_date,
+              })}
+            </span>
+          </div>
+          <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+            <span className="text-muted-foreground">Vendor</span>
+            <span>{item.vendors ? item.vendors.name : "-"}</span>
+          </div>
+          <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+            <span className="text-muted-foreground">Corporates</span>
+            <span>{item.corporates?.name}</span>
+          </div>
+          <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+            <span className="text-muted-foreground">Created At</span>
+            <span>
+              {formattedDate({
+                date: item.created_at,
+                withTime: true,
+              })}
+            </span>
+          </div>
+          <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+            <span className="text-muted-foreground">Updated At</span>
+            <span>
+              {formattedDate({
+                date: item.updated_at,
+                withTime: true,
+              })}
+            </span>
           </div>
         </div>
       </DialogContent>

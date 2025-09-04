@@ -1,4 +1,5 @@
 import type {
+  CreateItemPayload,
   GetItemParams,
   Item,
   ItemApiResponse,
@@ -26,6 +27,16 @@ export const getItems = async (
 
 export const getItemById = async (itemId: string): Promise<ItemApiResponse> => {
   const res = await apiClient.get<ItemApiResponse>(`/items/${itemId}`);
+  return res.data;
+};
+
+export const createItem = async (
+  payload: CreateItemPayload
+): Promise<ItemApiResponse> => {
+  const res = await apiClient.post<ItemApiResponse>(
+    "/items/batch-create",
+    payload
+  );
   return res.data;
 };
 
