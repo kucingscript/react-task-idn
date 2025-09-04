@@ -1,7 +1,7 @@
 import type { Item } from "@/types/item";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconEye, IconPencil } from "@tabler/icons-react";
 import { ItemStatusBadge } from "../StatusBadge/ItemStatusBadge";
 
 export const columns: ColumnDef<Item>[] = [
@@ -46,6 +46,11 @@ export const columns: ColumnDef<Item>[] = [
     },
   },
   {
+    accessorKey: "vendors.name",
+    header: "Vendor",
+    cell: ({ row }) => row.original.vendors?.name,
+  },
+  {
     id: "actions",
     header: () => <div className="text-center">Actions</div>,
     cell: ({ row, table }) => {
@@ -65,19 +70,10 @@ export const columns: ColumnDef<Item>[] = [
             variant="ghost"
             size="icon"
             className="text-blue-500 hover:bg-blue-100 hover:text-blue-700 h-8 w-8"
-            onClick={() => console.log("Edit item:", row.original.item_id)}
+            onClick={() => meta?.onEdit?.(row.original)}
           >
             <span className="sr-only">Edit</span>
             <IconPencil size={18} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-red-500 hover:bg-red-100 hover:text-red-700 h-8 w-8"
-            onClick={() => console.log("Delete item:", row.original.item_id)}
-          >
-            <span className="sr-only">Delete</span>
-            <IconTrash size={18} />
           </Button>
         </div>
       );

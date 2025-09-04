@@ -7,6 +7,7 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
+import Loader from "@/components/Loader/Loader";
 
 const Transactions = () => {
   const {
@@ -46,7 +47,7 @@ const Transactions = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        <Loader />
       ) : (
         <DataTable
           columns={columns}

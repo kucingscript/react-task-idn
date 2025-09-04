@@ -1,14 +1,16 @@
 import type {
-  DetailItemApiResponse,
   GetItemParams,
+  Item,
   ItemApiResponse,
+  UpdateItemPayload,
 } from "@/types/item";
 import apiClient from "./api";
+import type { ApiResponse } from "@/types/types";
 
 export const getItems = async (
   params: GetItemParams
-): Promise<ItemApiResponse> => {
-  const res = await apiClient.get<ItemApiResponse>("/items", {
+): Promise<ApiResponse<Item>> => {
+  const res = await apiClient.get<ApiResponse<Item>>("/items", {
     params: {
       page: params.page || 1,
       limit: params.limit || 10,
@@ -22,9 +24,18 @@ export const getItems = async (
   return res.data;
 };
 
-export const getItemById = async (
-  itemId: string
-): Promise<DetailItemApiResponse> => {
-  const res = await apiClient.get<DetailItemApiResponse>(`/items/${itemId}`);
+export const getItemById = async (itemId: string): Promise<ItemApiResponse> => {
+  const res = await apiClient.get<ItemApiResponse>(`/items/${itemId}`);
+  return res.data;
+};
+
+export const updateItem = async (
+  itemId: string,
+  payload: UpdateItemPayload
+): Promise<ItemApiResponse> => {
+  const res = await apiClient.post<ItemApiResponse>(
+    `/items/${itemId}/update`,
+    payload
+  );
   return res.data;
 };

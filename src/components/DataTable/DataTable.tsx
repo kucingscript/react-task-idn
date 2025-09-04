@@ -15,6 +15,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import type { PageInfo } from "@/types/types";
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+} from "@tabler/icons-react";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -46,6 +52,7 @@ export function DataTable<TData>({
 
   const canPreviousPage = currentPage > 1;
   const canNextPage = pageInfo ? currentPage < pageInfo.total_page : false;
+  const totalPages = pageInfo?.total_page ?? 1;
 
   return (
     <div>
@@ -96,17 +103,29 @@ export function DataTable<TData>({
       </div>
       <div className="flex items-center justify-between py-4">
         <div className="text-sm text-muted-foreground">
-          Page {currentPage} of {pageInfo?.total_page ?? 1}
+          Page {currentPage} of {totalPages}
         </div>
-        <div className="space-x-2">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            className="hidden h-8 w-8 p-0 lg:flex"
+            onClick={() => onPageChange(1)}
+            disabled={!canPreviousPage}
+          >
+            <span className="sr-only">Go to first page</span>
+            <IconChevronsLeft className="h-4 w-4" />
+          </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={!canPreviousPage}
           >
+            <IconChevronLeft className="h-4 w-4 mr-1" />
             Previous
           </Button>
+
           <Button
             variant="outline"
             size="sm"
@@ -114,6 +133,17 @@ export function DataTable<TData>({
             disabled={!canNextPage}
           >
             Next
+            <IconChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="hidden h-8 w-8 p-0 lg:flex"
+            onClick={() => onPageChange(totalPages)}
+            disabled={!canNextPage}
+          >
+            <span className="sr-only">Go to last page</span>
+            <IconChevronsRight className="h-4 w-4" />
           </Button>
         </div>
       </div>

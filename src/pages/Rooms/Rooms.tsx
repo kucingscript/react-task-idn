@@ -4,6 +4,7 @@ import { DataTable } from "@/components/DataTable/DataTable";
 import { columns } from "@/components/RoomsDataTable/RoomsDataTable";
 import { useDataTable } from "@/hooks/use-data-table";
 import type { Room } from "@/types/room";
+import Loader from "@/components/Loader/Loader";
 
 const Rooms = () => {
   const {
@@ -36,7 +37,7 @@ const Rooms = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        <Loader />
       ) : (
         <DataTable
           columns={columns}

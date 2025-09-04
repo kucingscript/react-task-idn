@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getItemById, getItems } from "@/lib/itemService";
 import type { Item, ItemStatus } from "@/types/item";
 import type { PageInfo } from "@/types/types";
@@ -20,7 +20,9 @@ import { getRooms } from "@/lib/roomService";
 import { getItemTypes } from "@/lib/ItemTypesService";
 import type { Room } from "@/types/room";
 import type { ItemType } from "@/types/item-types";
-import { ItemDetailDialog } from "@/components/ItemDetailDIalog/ItemDetailDIalog";
+import { ItemDetailDialog } from "@/components/ItemDialog/ItemDetailDIalog";
+import ItemUpdateDialog from "@/components/ItemDialog/ItemUpdateDIalog";
+import Loader from "@/components/Loader/Loader";
 
 const itemStatuses: ItemStatus[] = [
   "REGISTERED",
@@ -46,6 +48,7 @@ const Items = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
 
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +56,45 @@ const Items = () => {
   const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const fetchItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await getItems({
+        page,
+        q: debouncedSearchTerm,
+        room_id: selectedRoom,
+        item_type_id: selectedItemType,
+        status: selectedStatus as ItemStatus,
+      });
+      if (response.code === 0) {
+        setData(response.data);
+        setPageInfo(response.pageInfo);
+      } else {
+        toast.error(response.message);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (debouncedSearchTerm && error.response?.status === 404) {
+        setData([]);
+        setPageInfo(null);
+        setError(null);
+      } else {
+        const errorMessage =
+          error.response?.data?.message || "Failed to fetch items";
+        toast.error(errorMessage);
+        setError(errorMessage);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    page,
+    debouncedSearchTerm,
+    selectedRoom,
+    selectedItemType,
+    selectedStatus,
+  ]);
 
   const handleViewDetails = async (itemId: string) => {
     try {
@@ -68,6 +110,11 @@ const Items = () => {
       toast.error(error.message);
       setError(error.message);
     }
+  };
+
+  const handleEdit = (item: Item) => {
+    setSelectedItem(item);
+    setIsUpdateOpen(true);
   };
 
   useEffect(() => {
@@ -87,46 +134,8 @@ const Items = () => {
   }, []);
 
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        setLoading(true);
-        const response = await getItems({
-          page,
-          q: debouncedSearchTerm,
-          room_id: selectedRoom,
-          item_type_id: selectedItemType,
-          status: selectedStatus as ItemStatus,
-        });
-        if (response.code === 0) {
-          setData(response.data);
-          setPageInfo(response.pageInfo);
-        } else {
-          toast.error(response.message);
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (debouncedSearchTerm && error.response?.status === 404) {
-          setData([]);
-          setPageInfo(null);
-          setError(null);
-        } else {
-          const errorMessage =
-            error.response?.data?.message || "Failed to fetch items";
-          toast.error(errorMessage);
-          setError(errorMessage);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchItems();
-  }, [
-    page,
-    debouncedSearchTerm,
-    selectedRoom,
-    selectedItemType,
-    selectedStatus,
-  ]);
+  }, [fetchItems]);
 
   if (error && data.length === 0) {
     return (
@@ -206,7 +215,7 @@ const Items = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        <Loader />
       ) : (
         <DataTable
           columns={columns}
@@ -217,6 +226,7 @@ const Items = () => {
           getRowId={(row) => row.item_id}
           meta={{
             onViewDetails: handleViewDetails,
+            onEdit: handleEdit,
           }}
         />
       )}
@@ -225,6 +235,13 @@ const Items = () => {
         item={selectedItem}
         isOpen={isDetailOpen}
         onOpenChange={setIsDetailOpen}
+      />
+
+      <ItemUpdateDialog
+        item={selectedItem}
+        isOpen={isUpdateOpen}
+        onOpenChange={setIsUpdateOpen}
+        onSuccess={fetchItems}
       />
     </div>
   );

@@ -18,12 +18,17 @@ export interface Item {
   procurement_date: string;
   created_at: string;
   item_types: {
+    item_type_id: string;
     name: string;
   };
   rooms: {
+    room_id: string;
     name: string;
   };
   corporates: CorporateInfo;
+  vendors: {
+    name: string;
+  };
 }
 
 export interface GetItemParams {
@@ -35,8 +40,14 @@ export interface GetItemParams {
   status?: string;
 }
 
-export interface DetailItemApiResponse {
+export interface ItemApiResponse {
   code: number;
   message: string;
   data: Item;
+}
+
+export interface UpdateItemPayload {
+  item_type_id: string;
+  room_id: string;
+  corporate_id: string;
 }

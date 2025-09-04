@@ -4,5 +4,6 @@ declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {
     onViewDetails?: (itemId: string) => void;
+    onEdit?: (item: Item) => void;
   }
 }

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/DataTable/DataTable";
 import { columns } from "@/components/ItemTypesDataTable/ItemTypesDataTable";
 import { useDataTable } from "@/hooks/use-data-table";
+import Loader from "@/components/Loader/Loader";
 
 const ItemTypes = () => {
   const {
@@ -36,7 +37,7 @@ const ItemTypes = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        <Loader />
       ) : (
         <DataTable
           columns={columns}

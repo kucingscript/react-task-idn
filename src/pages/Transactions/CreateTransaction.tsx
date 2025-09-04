@@ -1,14 +1,8 @@
+import { FormSelect } from "@/components/FormSelect/FormSelect";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { getItems } from "@/lib/itemService";
 import { createTransaction } from "@/lib/transactionService";
 import { useAuthStore } from "@/store/auth";
@@ -17,7 +11,7 @@ import type { CreateTransactionPayload } from "@/types/transaction";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as yup from "yup";
@@ -28,13 +22,14 @@ const schema = yup.object().shape({
     .string()
     .oneOf(["NON_INFECTIOUS", "INFECTIOUS"])
     .required("Infectious Type is required"),
-  total_weight: yup.number().min(0).default(0),
-  total_weight_scales: yup.number().min(0).default(0),
+  total_weight: yup.number().min(0).default(0).min(0),
+  total_weight_scales: yup.number().min(0).default(0).min(0),
   corporate_id: yup.string().required(),
   details: yup
     .array()
     .of(yup.object().shape({ item_id: yup.string().required() }))
-    .min(1, "At least one item must be added"),
+    .min(1, "At least one item must be added")
+    .required(),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -51,7 +46,7 @@ const CreateTransaction = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       wash_type: "NORMAL",
@@ -113,7 +108,6 @@ const CreateTransaction = () => {
       toast.error(
         error.response?.data?.message || "Failed to create transaction."
       );
-      console.error(error);
     }
   };
 
@@ -122,56 +116,31 @@ const CreateTransaction = () => {
       <h1 className="text-2xl font-bold mb-6">Create In Transaction</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <Label>Wash Type</Label>
-            <Controller
-              name="wash_type"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  defaultValue="NORMAL"
-                  disabled
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NORMAL">Normal</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-          <div>
-            <Label>Infectious Type</Label>
-            <Controller
-              name="infectious_type"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NON_INFECTIOUS">
-                      Non-Infectious
-                    </SelectItem>
-                    <SelectItem value="INFECTIOUS">Infectious</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
+          <FormSelect
+            control={control}
+            name="wash_type"
+            label="Wash Type"
+            options={[{ value: "NORMAL", label: "Normal" }]}
+            errors={errors}
+            disabled
+          />
+          <FormSelect
+            control={control}
+            name="infectious_type"
+            label="Infectious Type"
+            options={[
+              { value: "NON_INFECTIOUS", label: "Non-Infectious" },
+              { value: "INFECTIOUS", label: "Infectious" },
+            ]}
+            errors={errors}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <Label htmlFor="total_weight">Total Weight</Label>
+            <Label className="mb-1" htmlFor="total_weight">
+              Total Weight
+            </Label>
             <Input
               id="total_weight"
               type="number"
@@ -179,9 +148,16 @@ const CreateTransaction = () => {
               {...register("total_weight")}
               className="w-full"
             />
+            {errors.total_weight && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.total_weight.message}
+              </p>
+            )}
           </div>
           <div>
-            <Label htmlFor="total_weight_scales">Total Weight Scales</Label>
+            <Label className="mb-1" htmlFor="total_weight_scales">
+              Total Weight Scales
+            </Label>
             <Input
               id="total_weight_scales"
               type="number"
@@ -189,6 +165,11 @@ const CreateTransaction = () => {
               {...register("total_weight_scales")}
               className="w-full"
             />
+            {errors.total_weight_scales && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.total_weight_scales.message}
+              </p>
+            )}
           </div>
         </div>
 
