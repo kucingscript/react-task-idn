@@ -13,7 +13,7 @@ import { getItems } from "@/lib/itemService";
 import { createTransaction } from "@/lib/transactionService";
 import { useAuthStore } from "@/store/auth";
 import type { Item } from "@/types/item";
-import type { CreateTransactionRequest } from "@/types/transaction";
+import type { CreateTransactionPayload } from "@/types/transaction";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -98,9 +98,10 @@ const CreateTransaction = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    const payload: CreateTransactionRequest = {
+    const payload: CreateTransactionPayload = {
       ...data,
-      total_qty: data.details.length,
+      total_qty: data.details?.length || 0,
+      details: data.details || [],
     };
 
     try {
@@ -176,6 +177,7 @@ const CreateTransaction = () => {
               type="number"
               step="0.1"
               {...register("total_weight")}
+              className="w-full"
             />
           </div>
           <div>
@@ -185,6 +187,7 @@ const CreateTransaction = () => {
               type="number"
               step="0.1"
               {...register("total_weight_scales")}
+              className="w-full"
             />
           </div>
         </div>

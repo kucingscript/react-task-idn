@@ -1,5 +1,5 @@
 import type {
-  CreateTransactionRequest,
+  CreateTransactionPayload,
   CreateTransactionResponse,
   Transaction,
 } from "@/types/transaction";
@@ -24,7 +24,7 @@ export const getTransactions = async (
 };
 
 export const createTransaction = async (
-  payload: CreateTransactionRequest
+  payload: CreateTransactionPayload
 ): Promise<CreateTransactionResponse> => {
   const res = await apiClient.post<CreateTransactionResponse>(
     "/in-transactions/create",

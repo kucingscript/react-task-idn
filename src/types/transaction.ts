@@ -20,14 +20,14 @@ interface TransactionDetailPayload {
   item_id: string;
 }
 
-export interface CreateTransactionRequest {
+export interface CreateTransactionPayload {
   wash_type: string;
   infectious_type: infectious_type;
   total_weight: number;
   total_weight_scales: number;
   total_qty: number;
-  details: TransactionDetailPayload[];
   corporate_id: string;
+  details: TransactionDetailPayload[];
 }
 
 export interface CreateTransactionResponse {
