@@ -3,7 +3,7 @@ import { FormSelect } from "@/components/FormSelect/FormSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createItem } from "@/lib/itemService";
+import { createItem, getItems } from "@/lib/itemService";
 import { getItemTypes } from "@/lib/ItemTypesService";
 import { getRooms } from "@/lib/roomService";
 import { useAuthStore } from "@/store/auth";
@@ -49,11 +49,14 @@ const CreateItem = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
   const [currentItemId, setCurrentItemId] = useState("");
+
   const [itemIdError, setItemIdError] = useState<string | null>(null);
+  const [isCheckingId, setIsCheckingId] = useState(false);
 
   const {
     handleSubmit,
     control,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -101,8 +104,9 @@ const CreateItem = () => {
     fetchInitialData();
   }, []);
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     const trimmedId = currentItemId.trim();
+
     setItemIdError(null);
 
     if (trimmedId.length < 10) {
@@ -110,10 +114,29 @@ const CreateItem = () => {
       return;
     }
 
-    const isDuplicate = fields.some((field) => field.item_id === trimmedId);
-    if (isDuplicate) {
+    const currentDetails = getValues("details") || [];
+    if (currentDetails.some((field) => field.item_id === trimmedId)) {
       setItemIdError("Item ID already exists in the list.");
       return;
+    }
+
+    setIsCheckingId(true);
+    try {
+      const response = await getItems({ q: trimmedId, limit: 1 });
+
+      if (response.pageInfo && response.pageInfo.total_data > 0) {
+        setItemIdError("Item ID already exists in the database.");
+        return;
+      } else {
+        append({ item_id: trimmedId });
+        setCurrentItemId("");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error("Error verifying Item ID. Please try again.");
+      console.error(error);
+    } finally {
+      setIsCheckingId(false);
     }
 
     append({ item_id: trimmedId });
@@ -211,7 +234,11 @@ const CreateItem = () => {
                 <p className="text-red-500 text-xs mt-1">{itemIdError}</p>
               )}
             </div>
-            <Button type="button" onClick={handleAddItem}>
+            <Button
+              type="button"
+              onClick={handleAddItem}
+              disabled={isCheckingId}
+            >
               <IconPlus className="mr-2 h-4 w-4" /> Add
             </Button>
           </div>
