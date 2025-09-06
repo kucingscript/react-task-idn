@@ -70,12 +70,32 @@ const Home = () => {
                   <Link to="/" className="hover:text-foreground">
                     Home
                   </Link>
-                  <Link
-                    to="/login"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Login
-                  </Link>
+                  {isLoggedIn ? (
+                    <>
+                      {isAdmin && (
+                        <Link
+                          to="/admin/dashboard"
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          Admin
+                        </Link>
+                      )}
+                      <a
+                        href="#"
+                        onClick={handleLogout}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        Logout
+                      </a>
+                    </>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      Login
+                    </Link>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
