@@ -6,6 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "./ui/sidebar";
 
 export function NavMain({
@@ -18,6 +19,7 @@ export function NavMain({
   }[];
 }) {
   const location = useLocation();
+  const { setOpenMobile } = useSidebar();
 
   return (
     <SidebarGroup>
@@ -30,7 +32,7 @@ export function NavMain({
                 tooltip={item.title}
                 isActive={location.pathname.startsWith(item.url)}
               >
-                <Link to={item.url}>
+                <Link to={item.url} onClick={() => setOpenMobile(false)}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
