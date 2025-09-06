@@ -1,10 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { IconBrandBluesky } from "@tabler/icons-react";
+import { useAuthStore } from "@/store/auth";
 
 const Home = () => {
+  const { isLoggedIn, user, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const isAdmin = user?.level?.toLowerCase() === "admin";
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +34,22 @@ const Home = () => {
           </nav>
           <div className="ml-auto flex items-center gap-4">
             <Button asChild>
-              <Link to="/login">Login</Link>
+              {isLoggedIn ? (
+                <>
+                  {isAdmin && (
+                    <Button asChild>
+                      <Link to="/admin/dashboard">Admin</Link>
+                    </Button>
+                  )}
+                  <Button variant="outline" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Button asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+              )}
             </Button>
             <Sheet>
               <SheetTrigger asChild>
