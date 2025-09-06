@@ -189,23 +189,30 @@ const CreateTransaction = () => {
           )}
 
           <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="flex items-center justify-between bg-muted p-2 rounded-md"
-              >
-                <span className="font-mono text-sm">{field.item_id}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-red-500 hover:text-red-600 cursor-pointer"
-                  onClick={() => remove(index)}
+            {fields.map((field, index) => {
+              const item = allItems.find((i) => i.item_id === field.item_id);
+              return (
+                <div
+                  key={field.id}
+                  className="flex items-center justify-between bg-muted p-2 rounded-md"
                 >
-                  <IconTrash size={16} />
-                </Button>
-              </div>
-            ))}
+                  <span className="font-mono text-sm">
+                    {item
+                      ? `${item.item_id} - ${item.item_types.name}`
+                      : field.item_id}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-red-500 hover:text-red-600 cursor-pointer"
+                    onClick={() => remove(index)}
+                  >
+                    <IconTrash size={16} />
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </div>
 

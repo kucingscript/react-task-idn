@@ -1,22 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
-import type { ItemStatus } from "@/types/item";
 import type { ItemType } from "@/types/item-types";
 import type { Room } from "@/types/room";
 import FilterSelect from "../FilterSelect/FilterSelect";
 import { Link } from "react-router-dom";
-
-const itemStatuses: ItemStatus[] = [
-  "REGISTERED",
-  "WASH",
-  "CLEAN",
-  "STORED",
-  "SENT",
-  "USED",
-  "DIRT",
-  "DEFECT",
-];
+import { itemStatuses } from "@/constants";
 
 interface ItemFiltersProps {
   searchTerm: string;

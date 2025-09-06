@@ -15,9 +15,9 @@ export const ItemStatusBadge = ({ status }: StatusBadgeProps) => {
   switch (status) {
     case "CLEAN":
     case "STORED":
+    case "WASH":
       variant = "default";
       break;
-    case "WASH":
     case "SENT":
     case "REGISTERED":
       variant = "outline";

@@ -3,28 +3,32 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import Login from "./pages/Login/Login";
+import {
+  Login,
+  Home,
+  NotFound,
+  Dashboard,
+  ItemTypes,
+  Rooms,
+  Items,
+  Transactions,
+  CreateTransaction,
+  CreateItem,
+} from "./pages";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
-import Home from "./pages/Home/Home";
-import NotFound from "./pages/NotFound/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
-import Dashboard from "./pages/AdminDashboard/Dashboard";
-import ItemTypes from "./pages/ItemTypes/ItemTypes";
-import Rooms from "./pages/Rooms/Rooms";
-import Items from "./pages/Items/Items";
-import Transactions from "./pages/Transactions/Transactions";
-import CreateTransaction from "./pages/Transactions/CreateTransaction";
-import CreateItem from "./pages/Items/CreateItem";
+import PublicRoute from "./components/PublicRoute/PublicRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthLayout />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-    ],
+    children: [{ index: true, element: <Home /> }],
+  },
+  {
+    element: <PublicRoute />,
+    children: [{ path: "login", element: <Login /> }],
   },
   {
     element: <ProtectedRoute />,
